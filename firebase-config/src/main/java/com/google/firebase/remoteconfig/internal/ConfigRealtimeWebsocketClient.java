@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
-import javax.websocket.MessageHandler;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
@@ -24,7 +23,6 @@ import javax.websocket.WebSocketContainer;
 @ClientEndpoint
 public class ConfigRealtimeWebsocketClient {
     private Session clientSession;
-    private MessageHandler messageHandler;
     private final Map<String, RealTimeEventListener> eventListeners;
     private final ConfigFetchHandler configFetchHandler;
     private static final Logger logger = Logger.getLogger("Real_Time_RC");

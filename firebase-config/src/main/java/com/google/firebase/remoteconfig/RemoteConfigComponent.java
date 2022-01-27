@@ -125,6 +125,7 @@ public class RemoteConfigComponent {
     this.analyticsConnector = analyticsConnector;
 
     this.appId = firebaseApp.getOptions().getApplicationId();
+    GlobalBackgroundListener.ensureBackgroundListenerIsRegistered(context);
 
     // When the component is first loaded, it will use a cached executor.
     // The getDefault call creates race conditions in tests, where the getDefault might be executing
@@ -207,7 +208,6 @@ public class RemoteConfigComponent {
                   getRealtimeClient(fetchHandler));
       in.startLoadingConfigsFromDisk();
       frcNamespaceInstances.put(namespace, in);
-      GlobalBackgroundListener.ensureBackgroundListenerIsRegistered(context);
     }
     return frcNamespaceInstances.get(namespace);
   }
