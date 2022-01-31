@@ -1,0 +1,74 @@
+// Copyright 2019 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+plugins {
+    id 'firebase-library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion project.targetSdkVersion
+    defaultConfig {
+        minSdkVersion 19
+        multiDexEnabled true
+        targetSdkVersion project.targetSdkVersion
+        versionName version
+    }
+    sourceSets {
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+    testOptions.unitTests.includeAndroidResources = true
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    ext.useProdBackendForTests = false
+}
+
+android.libraryVariants.all { variant ->
+    if (findProperty("useProdBackendForTests")) {
+        variant.buildConfigField("boolean", "USE_EMULATOR_FOR_TESTS", "false")
+    } else {
+        variant.buildConfigField("boolean", "USE_EMULATOR_FOR_TESTS", "true")
+    }
+
+    def localProps = new Properties()
+
+    try {
+        file("local.properties").withInputStream { localProps.load(it) }
+    } catch (FileNotFoundException e) {
+    }
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation project(':firebase-common')
+    implementation project(':firebase-firestore')
+    implementation project(':firebase-firestore:ktx')
+
+    androidTestImplementation 'junit:junit:4.12'
+    androidTestImplementation "com.google.truth:truth:$googleTruthVersion"
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:core:1.2.0'
+    androidTestImplementation 'com.google.android.gms:play-services-basement:17.0.0'
+    androidTestImplementation 'com.google.android.gms:play-services-tasks:17.0.0'
+    androidTestImplementation 'com.google.android.gms:play-services-base:17.0.0'
+}
+
+// ==========================================================================
+// Copy from here down if you want to use the google-services plugin in your
+// androidTest integration tests.
+// ==========================================================================
+ext.packageName = "com.google.firebase.firestore"
+apply from: '../../gradle/googleServices.gradle'
