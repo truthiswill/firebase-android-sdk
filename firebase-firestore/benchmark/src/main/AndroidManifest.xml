@@ -10,5 +10,5 @@
 
     <instrumentation
         android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="com.google.firebase.firestore" />
+        android:targetPackage="com.google.firebase.firestore.benchmark" />
 </manifest>

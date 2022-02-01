@@ -32,6 +32,12 @@ class QueryBenchmark {
 
     @Test
     fun indexOverlays() {
-        val documentReference= IntegrationTestUtil.testFirestore()
+        val firestore = IntegrationTestUtil.testFirestore()
+        val collection = firestore.collection(UUID.randomUUID().toString());
+
+        firestore.disableNetwork();
+        for (i in 1..50) {
+            collection.add({});
+        }
     }
 }
