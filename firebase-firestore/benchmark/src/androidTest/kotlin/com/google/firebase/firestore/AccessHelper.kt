@@ -1,6 +1,7 @@
 package com.google.firebase.firestore
 
 import android.content.Context
+import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore.InstanceRegistry
 import com.google.firebase.firestore.auth.CredentialsProvider
@@ -28,5 +29,13 @@ object AccessHelper {
                 null,
                 instanceRegistry,
                 null)
+    }
+
+    fun setIndexConfiguration(db: FirebaseFirestore, json: String) {
+        db.setIndexConfiguration(json);
+    }
+
+    fun forceBackfill(db: FirebaseFirestore): Task<Void> {
+       return db.forceBackfill();
     }
 }

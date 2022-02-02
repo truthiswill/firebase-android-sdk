@@ -67,7 +67,7 @@ object IntegrationTestUtil {
                 EmptyAuthCredentialsProvider(),
                 EmptyAppCheckTokenProvider(),
                 AsyncQueue(),
-                { dbId: String? -> } as InstanceRegistry
+                InstanceRegistry {  }
         )
         waitFor<Void>(firestore.clearPersistence())
         firestore.firestoreSettings = settings!!
@@ -89,11 +89,11 @@ object IntegrationTestUtil {
         }
     }
 
-    fun <T> waitFor(task: com.google.android.gms.tasks.Task<T>): T {
+    fun <T> waitFor(task: Task<T>): T {
         return waitFor(task, OPERATION_WAIT_TIMEOUT_MS)
     }
 
-    fun <T> waitFor(task: com.google.android.gms.tasks.Task<T>, timeoutMS: Long): T {
+    fun <T> waitFor(task: Task<T>, timeoutMS: Long): T {
         return try {
             com.google.android.gms.tasks.Tasks.await<T>(task, timeoutMS, TimeUnit.MILLISECONDS)
         } catch (e: TimeoutException) {

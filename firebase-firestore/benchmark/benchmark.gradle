@@ -52,10 +52,11 @@ android.libraryVariants.all { variant ->
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
     implementation project(':firebase-common')
     implementation project(':firebase-firestore')
-    implementation project(':firebase-firestore:ktx')
+    implementation 'com.squareup.okio:okio:2.8.0'
+    implementation 'androidx.annotation:annotation:1.2.0'
 
     androidTestImplementation 'junit:junit:4.12'
     androidTestImplementation "com.google.truth:truth:$googleTruthVersion"
@@ -64,6 +65,7 @@ dependencies {
     androidTestImplementation 'com.google.android.gms:play-services-basement:17.0.0'
     androidTestImplementation 'com.google.android.gms:play-services-tasks:17.0.0'
     androidTestImplementation 'com.google.android.gms:play-services-base:17.0.0'
+    androidTestImplementation 'androidx.benchmark:benchmark-junit4:1.1.0-alpha13'
 }
 
 // ==========================================================================
