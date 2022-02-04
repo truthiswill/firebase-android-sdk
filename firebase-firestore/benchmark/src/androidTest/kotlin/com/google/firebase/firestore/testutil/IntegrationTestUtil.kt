@@ -18,17 +18,21 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.AccessHelper
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestore.InstanceRegistry
-import com.google.firebase.firestore.model.DatabaseId
-import com.google.firebase.firestore.util.AsyncQueue
-import java.lang.RuntimeException
-import java.util.*
-import java.util.concurrent.*
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.R
 import com.google.firebase.firestore.auth.CredentialsProvider
 import com.google.firebase.firestore.auth.User
+import com.google.firebase.firestore.benchmark.BuildConfig
+import com.google.firebase.firestore.model.DatabaseId
+import com.google.firebase.firestore.util.AsyncQueue
 import com.google.firebase.firestore.util.Listener
+import java.lang.RuntimeException
+import java.util.concurrent.ExecutionException
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeoutException
 
 /** A set of helper methods for tests  */
 object IntegrationTestUtil {
@@ -59,15 +63,15 @@ object IntegrationTestUtil {
     fun testFirestore(settings: FirebaseFirestoreSettings? = newTestSettings()): FirebaseFirestore {
         val persistenceKey: String = "db" + instances.size
         val context: Context = ApplicationProvider.getApplicationContext()
-        val databaseId= DatabaseId.forDatabase(getProjectId(), DatabaseId.DEFAULT_DATABASE_ID)
-        val firestore= AccessHelper.newFirebaseFirestore(
+        val databaseId = DatabaseId.forDatabase(getProjectId(), DatabaseId.DEFAULT_DATABASE_ID)
+        val firestore = AccessHelper.newFirebaseFirestore(
                 context,
                 databaseId,
                 persistenceKey,
                 EmptyAuthCredentialsProvider(),
                 EmptyAppCheckTokenProvider(),
                 AsyncQueue(),
-                InstanceRegistry {  }
+                InstanceRegistry { }
         )
         waitFor<Void>(firestore.clearPersistence())
         firestore.firestoreSettings = settings!!
@@ -95,7 +99,7 @@ object IntegrationTestUtil {
 
     fun <T> waitFor(task: Task<T>, timeoutMS: Long): T {
         return try {
-            com.google.android.gms.tasks.Tasks.await<T>(task, timeoutMS, TimeUnit.MILLISECONDS)
+            Tasks.await<T>(task, timeoutMS, TimeUnit.MILLISECONDS)
         } catch (e: TimeoutException) {
             throw RuntimeException(e)
         } catch (e: ExecutionException) {
@@ -128,4 +132,3 @@ open class EmptyAuthCredentialsProvider : CredentialsProvider<User>() {
 
     override fun removeChangeListener() {}
 }
-

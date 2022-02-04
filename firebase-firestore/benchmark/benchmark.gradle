@@ -33,6 +33,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     ext.useProdBackendForTests = false
 }
 
@@ -52,10 +55,10 @@ android.libraryVariants.all { variant ->
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
     implementation project(':firebase-common')
     implementation project(':firebase-firestore')
-    implementation 'com.squareup.okio:okio:2.8.0'
+    implementation 'com.squareup.okio:okio:2.7.0'
     implementation 'androidx.annotation:annotation:1.2.0'
 
     androidTestImplementation 'junit:junit:4.12'
@@ -65,7 +68,7 @@ dependencies {
     androidTestImplementation 'com.google.android.gms:play-services-basement:17.0.0'
     androidTestImplementation 'com.google.android.gms:play-services-tasks:17.0.0'
     androidTestImplementation 'com.google.android.gms:play-services-base:17.0.0'
-    androidTestImplementation 'androidx.benchmark:benchmark-junit4:1.1.0-alpha13'
+    androidTestImplementation 'androidx.benchmark:benchmark-junit4:1.0.0'
 }
 
 // ==========================================================================
