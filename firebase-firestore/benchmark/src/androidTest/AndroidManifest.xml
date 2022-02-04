@@ -10,6 +10,6 @@
     </application>
 
     <instrumentation
-        android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="com.google.firebase.firestore.benchmark" />
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.google.firebase.firestore.benchmark.test" />
 </manifest>
