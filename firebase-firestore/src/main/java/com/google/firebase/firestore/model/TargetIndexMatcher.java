@@ -98,6 +98,9 @@ public class TargetIndexMatcher {
     equalityFilters = new ArrayList<>();
 
     for (Filter filter : target.getFilters()) {
+      hardAssert(
+          filter instanceof FieldFilter,
+          "TargetIndexMatcher does not work for targets with composite filters.");
       FieldFilter fieldFilter = (FieldFilter) filter;
       if (fieldFilter.isInequality()) {
         hardAssert(
