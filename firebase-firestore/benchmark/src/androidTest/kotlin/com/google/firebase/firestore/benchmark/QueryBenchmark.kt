@@ -23,6 +23,9 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class QueryBenchmark() {
 
+    // do one shared test setup that sets up colelctiosn for RDC and overlays that can be re-used
+    // make test paramterized
+
     val NUMBER_OF_RESULTS = 10
     val NUMBER_OF_PROPERTIES = 100
     val NUMBER_OF_DOCUMENTS = 250
@@ -89,29 +92,29 @@ class QueryBenchmark() {
         }
     }
 
-    @Test
-    fun remoteDocumentsWithoutIndex() {
-        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
-        benchmarkRule.measureRepeated {
-            waitFor(query.get())
-        }
-    }
-
-    @Test
-    fun remoteDocumentsWithIndex() {
-        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
-        benchmarkRule.measureRepeated {
-
-            waitFor(query.get())
-        }
-    }
-
-    @Test
-    fun remoteDocumentsWithFree() {
-        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
-        benchmarkRule.measureRepeated {
-
-            waitFor(query.get())
-        }
-    }
+//    @Test
+//    fun remoteDocumentsWithoutIndex() {
+//        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
+//        benchmarkRule.measureRepeated {
+//            waitFor(query.get())
+//        }
+//    }
+//
+//    @Test
+//    fun remoteDocumentsWithIndex() {
+//        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
+//        benchmarkRule.measureRepeated {
+//
+//            waitFor(query.get())
+//        }
+//    }
+//
+//    @Test
+//    fun remoteDocumentsWithFree() {
+//        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
+//        benchmarkRule.measureRepeated {
+//
+//            waitFor(query.get())
+//        }
+//    }
 }
