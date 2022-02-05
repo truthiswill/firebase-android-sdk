@@ -9,12 +9,12 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.testutil.IntegrationTestUtil
 import com.google.firebase.firestore.testutil.IntegrationTestUtil.waitFor
-import java.util.UUID
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -23,6 +23,10 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class QueryBenchmark() {
+
+    val NUMBER_OF_RESULTS = 10
+    val NUMBER_OF_PROPERTIES = 100
+    val NUMBER_OF_DOCUMENTS = 250
 
     @get:Rule
     val benchmarkRule = BenchmarkRule()
@@ -42,22 +46,31 @@ class QueryBenchmark() {
 
         firestore.disableNetwork()
 
-        for (i in 1..50) {
-            collection.add(mapOf("count" to i))
+        val data = mutableMapOf<String, Int>();
+        for (i in 1..NUMBER_OF_PROPERTIES) {
+            data.put(Integer.toString(i), i);
         }
+
+        val batch = firestore.batch()
+        for (i in 1..NUMBER_OF_DOCUMENTS) {
+            data.put("count", i);
+            batch.set(collection.document(), data);
+        }
+        batch.commit()
     }
 
     @Test
     fun overlaysWithoutIndex() {
-        val query = collection.whereLessThan("count", 10)
-        benchmarkRule.measureRepeated {
-            waitFor(query.get())
+        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
+            benchmarkRule.measureRepeated {
+
+                waitFor(query.get())
         }
     }
 
     @Test
     fun overlaysWithIndex() {
-        val query = collection.whereLessThan("count", 10)
+        val query = collection.whereLessThanOrEqualTo("count", NUMBER_OF_RESULTS)
 
         AccessHelper.setIndexConfiguration(firestore, "{\n" +
                 "  indexes: [\n" +
@@ -69,8 +82,10 @@ class QueryBenchmark() {
                 "    }\n" +
                 "  ]}\n")
 
-        waitFor(AccessHelper.forceBackfill(firestore))
+        // TODO(mrschmidt): Figure out why this has a document id
+       // 2022-02-04 17:36:45.061 17648-17696/? I/Firestore: (24.0.1) [SQLiteIndexManager]: Using index 'FieldIndex{indexId=0, collectionGroup=d34a678b-67ec-4737-883c-21c354c5064b, segments=[Segment{fieldPath=count, kind=ASCENDING}], indexState=IndexState{sequenceNumber=2, offset=IndexOffset{readTime=SnapshotVersion(seconds=0, nanos=0), documentKey=d34a678b-67ec-4737-883c-21c354c5064b/zxqJIhFLbG2eBdVwslS1, largestBatchId=50}}}' to execute 'Query(d34a678b-67ec-4737-883c-21c354c5064b where count < 10 order by count, __name__)' (Arrays: null, Lower bound: Bound(inclusive=true, position=NaN), Upper bound: Bound(inclusive=false, position=10))
 
+        waitFor(AccessHelper.forceBackfill(firestore))
         benchmarkRule.measureRepeated {
             waitFor(query.get())
         }
