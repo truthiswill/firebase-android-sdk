@@ -28,7 +28,6 @@ import io.grpc.StatusException;
 import io.grpc.StatusRuntimeException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -266,7 +265,6 @@ public class Util {
       sb.append(sequence);
       for (int i = 1; i < count; i++) {
         sb.append(delimiter);
-        Arrays.asList()Collections.addAll(species, species
         sb.append(sequence);
       }
     }

@@ -53,7 +53,6 @@ object IntegrationTestUtil {
             settings.host = String.format("%s:%d", EMULATOR_HOST, EMULATOR_PORT)
             settings.isSslEnabled = false
         }
-        settings.isPersistenceEnabled = true
         return settings.build()
     }
 

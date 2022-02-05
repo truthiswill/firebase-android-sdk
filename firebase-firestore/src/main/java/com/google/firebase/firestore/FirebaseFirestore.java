@@ -353,6 +353,7 @@ public class FirebaseFirestore {
   }
 
   Task<Void> forceBackfill() {
+    ensureClientConfigured();
     return client.forceBackfill();
   }
 

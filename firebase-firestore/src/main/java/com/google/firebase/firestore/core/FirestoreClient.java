@@ -353,7 +353,10 @@ public final class FirestoreClient {
 
   @VisibleForTesting
   public Task<Void> forceBackfill() {
-    Preconditions.checkNotNull(indexBackfiller, "Can't force backfill with memeory persistence");
-    return asyncQueue.enqueue(indexBackfiller::backfillAll);
+      this.verifyNotTerminated();
+    return asyncQueue.enqueue(() -> {
+        Preconditions.checkNotNull(indexBackfiller, "Can't force backfill with memory persistence");
+        indexBackfiller.backfillAll();
+    });
   }
 }
